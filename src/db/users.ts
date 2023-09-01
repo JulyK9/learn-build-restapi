@@ -22,6 +22,7 @@ export const getUserBySessionToken = (sessionToken: string) =>
 export const getUserById = (id: string) => UserModel.findById(id);
 export const createUser = (values: Record<string, any>) =>
   new UserModel(values).save().then((user) => user.toObject());
+// toObject() 는 Mongoose 문서 객체를 일반 JavaScript 객체로 변환하는 역할
 export const deleteUserById = (id: string) =>
   UserModel.findOneAndDelete({ _id: id });
 export const updateUserById = (id: string, values: Record<string, any>) =>
