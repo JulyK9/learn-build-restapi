@@ -2,8 +2,8 @@
 // 사용자 등록을 처리하는 부분
 import express from 'express';
 
-import { createUser, getUserByEmail } from 'db/users';
-import { random, authentication } from 'helpers';
+import { createUser, getUserByEmail } from '../db/users';
+import { random, authentication } from '../helpers';
 
 // express로 컨트롤러 함수를 정의
 export const register = async (req: express.Request, res: express.Response) => {
