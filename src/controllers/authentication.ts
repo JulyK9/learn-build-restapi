@@ -5,6 +5,52 @@ import express from 'express';
 import { createUser, getUserByEmail } from '../db/users';
 import { random, authentication } from '../helpers';
 
+// login 컨트롤러 함수 정의
+export const login = async (req: express.Request, res: express.Response) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.sendStatus(400);
+    }
+
+    const user = await getUserByEmail(email).select(
+      '+authentication.salt +authentication.password'
+    );
+    // select 메서드는 mongoose에서 데이터베이스 쿼리를 실행할 때 필드 선택 옵션을 지정하는 부분임
+    // 사용자 객체에서 선택할 필드를 지정하는데 '+' 기호로 해당 필드를 선택하도록 지정
+    // 즉 이메일 기반으로 사용자를 검색하여 검색된 사용자 객체에서 해당 필드를 선택하여 가져와 인증 과정에서 활용
+
+    if (!user) {
+      return res.sendStatus(400);
+    }
+
+    const expectedHash = authentication(user.authentication.salt, password);
+
+    if (user.authentication.password !== expectedHash) {
+      return res.sendStatus(403); // 인증은 되었으나 요청 리소스에 대한 접근권한 없음
+    }
+
+    const salt = random();
+    user.authentication.sessionToken = authentication(
+      salt,
+      user._id.toString()
+    );
+
+    await user.save();
+
+    res.cookie('JK9-AUTH', user.authentication.sessionToken, {
+      domain: 'localhost',
+      path: '/',
+    });
+
+    return res.status(200).json(user).end();
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};
+
 // express로 컨트롤러 함수를 정의
 export const register = async (req: express.Request, res: express.Response) => {
   try {
