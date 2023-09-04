@@ -10,7 +10,9 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-export const UserModel = mongoose.model('User', UserSchema);
+// export const UserModel = mongoose.model('User', UserSchema);
+export const UserModel = mongoose.model('User', UserSchema, 'myusers');
+// 세번째 인자에 스트링으로 추가하면 해당 명칭으로된 컬렉션을 추가할 수 있음!
 
 // some actions, which are going to be used in controller
 export const getUsers = () => UserModel.find();

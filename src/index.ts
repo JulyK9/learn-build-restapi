@@ -30,7 +30,9 @@ server.listen(8080, () => {
   console.log(`Server running on http://localhost:8080/`);
 });
 
-const MONGO_URL = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@boilerplate.axivy.mongodb.net/`;
+// const MONGO_URL = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@boilerplate.axivy.mongodb.net/`;
+const MONGO_URL = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PW}@boilerplate.axivy.mongodb.net/newdb`;
+// 끝 부분에 db 이름을 넣어주면 mongodb 데이터베이스를 추가하거나 지정할 수 있음!
 
 mongoose.Promise = Promise;
 mongoose.connect(MONGO_URL);
