@@ -31,14 +31,18 @@ export const login = async (req: express.Request, res: express.Response) => {
       return res.sendStatus(403); // 인증은 되었으나 요청 리소스에 대한 접근권한 없음
     }
 
+    // salt와 사용자 아이디를 기반으로 세션 토큰 생성
     const salt = random();
     user.authentication.sessionToken = authentication(
       salt,
       user._id.toString()
     );
 
+    // 새로운 세션 토큰을 생성하고 사용자 객체에 저장
     await user.save();
 
+    // 새로 생성한 세션 토큰을 쿠키로 설정하여 클라이언트에게 전달
+    // 클라리언트는 세션을 유지하고 인증된 요청을 보낼 수 있음
     res.cookie('JK9-AUTH', user.authentication.sessionToken, {
       domain: 'localhost',
       path: '/',
