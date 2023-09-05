@@ -34,3 +34,30 @@ export const isAuthenticated = async (
     return res.sendStatus(400);
   }
 };
+
+export const isOwner = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    // req 객체에서 'identity._id' 경로를 사용하여 현재 사용자의 ID를 추출
+    // lodash 라이브러리의 메소드인 get은 객체에서 지정된 경로의 값을 추출하게 해줌
+    // 'identity._id' 경로는 현재 사용자 객체의 _id 속성을 나타냄
+    const currentUserId = get(req, 'identity._id') as string;
+
+    if (!currentUserId) {
+      return res.sendStatus(403);
+    }
+
+    if (currentUserId.toString() !== id) {
+      return res.sendStatus(403);
+    }
+
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};
