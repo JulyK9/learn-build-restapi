@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { deleteUserById, getUsers } from '../db/users';
+import { deleteUserById, getUserById, getUsers } from '../db/users';
 
 // db에서 전체유저를 찾아서 반환해주는 컨트롤러
 export const getAllUsers = async (
@@ -32,6 +32,33 @@ export const deleteUser = async (
     const deleteUser = await deleteUserById(id);
 
     return res.json(deleteUser);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};
+
+// 유저 네임을 업데이트하는 컨트롤러
+export const updateUser = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  try {
+    const { id } = req.params;
+    const { username } = req.body;
+
+    if (!username) {
+      return res.sendStatus(400);
+    }
+
+    // id로 해당 유저를 확인
+    const user = await getUserById(id);
+    // 해당 유저의 username에 요청을 통해 들어온(업데이트하려고하는) username을 할당
+    user.username = username;
+    // 해당 유저 객체를 저장
+    await user.save();
+
+    return res.status(200).json(user).end();
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
