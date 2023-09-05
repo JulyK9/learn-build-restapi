@@ -2,6 +2,7 @@ import express from 'express';
 
 import { getUsers } from '../db/users';
 
+// db에서 전체유저를 찾아서 반환해주는 컨트롤러
 export const gegAllUsers = async (
   req: express.Request,
   res: express.Response
