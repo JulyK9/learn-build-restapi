@@ -1,5 +1,7 @@
 import express from 'express';
+
 import authentication from './authentication';
+import users from './users';
 
 // express의 라우터 객체 생성
 // 라우터는 URL 경로와 HTTP 메서드에 따라 요청을 처리하고 라우팅함
@@ -10,6 +12,8 @@ export default (): express.Router => {
   // authentication 모듈 내부에서 정의한 경로 및 핸들러 설정이 router 객체에 적용됨
   // 이 설정이 모듈 내에서 처리되며 모듈을 불러온 곳에서 설정된 라우터를 사용할 수 있도록 함
   // 모듈화된 라우팅을 설정하는 것
+
+  users(router);
 
   return router;
 };
